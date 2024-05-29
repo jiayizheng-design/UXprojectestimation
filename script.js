@@ -35,7 +35,13 @@ tasks.forEach((task, index) => {
   const taskLabel = document.createElement('label');
   taskLabel.className = 'block text-lg font-semibold mb-2 cursor-pointer';
   taskLabel.innerText = task.name;
-  taskLabel.addEventListener('click', () => toggleOptions(index));
+  
+  const taskCheckbox = document.createElement('input');
+  taskCheckbox.type = 'checkbox';
+  taskCheckbox.className = 'mr-2';
+  taskCheckbox.addEventListener('change', () => toggleOptions(index));
+  taskLabel.prepend(taskCheckbox);
+  
   taskDiv.appendChild(taskLabel);
 
   const optionsDiv = document.createElement('div');
@@ -47,30 +53,28 @@ tasks.forEach((task, index) => {
       const optionDiv = document.createElement('div');
       optionDiv.className = 'mb-2';
 
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.id = `task-${index}-${option}`;
-      checkbox.name = `task-${index}`;
-      checkbox.value = option;
-      checkbox.className = 'mr-2';
-      optionDiv.appendChild(checkbox);
+      const optionLabel = document.createElement('label');
+      optionLabel.innerText = option;
+      optionDiv.appendChild(optionLabel);
 
-      const label = document.createElement('label');
-      label.htmlFor = `task-${index}-${option}`;
-      label.innerText = option;
-      optionDiv.appendChild(label);
-
-      const sizeSelect = document.createElement('select');
-      sizeSelect.id = `size-${index}-${option}`;
-      sizeSelect.className = 'ml-2 p-1 border rounded';
       Object.keys(sizeLevels).forEach(size => {
-        const optionElement = document.createElement('option');
-        optionElement.value = size;
-        optionElement.innerText = size;
-        optionElement.title = sizeLevels[size].description;
-        sizeSelect.appendChild(optionElement);
+        const sizeDiv = document.createElement('div');
+        sizeDiv.className = 'ml-4';
+
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = `size-${index}-${option}`;
+        radio.value = size;
+        radio.className = 'mr-2';
+        sizeDiv.appendChild(radio);
+
+        const radioLabel = document.createElement('label');
+        radioLabel.innerText = size;
+        radioLabel.title = sizeLevels[size].description;
+        sizeDiv.appendChild(radioLabel);
+
+        optionDiv.appendChild(sizeDiv);
       });
-      optionDiv.appendChild(sizeSelect);
 
       optionsDiv.appendChild(optionDiv);
     });
@@ -78,30 +82,28 @@ tasks.forEach((task, index) => {
     const optionDiv = document.createElement('div');
     optionDiv.className = 'mb-2';
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.id = `task-${index}`;
-    checkbox.name = `task-${index}`;
-    checkbox.value = task.name;
-    checkbox.className = 'mr-2';
-    optionDiv.appendChild(checkbox);
+    const optionLabel = document.createElement('label');
+    optionLabel.innerText = task.name;
+    optionDiv.appendChild(optionLabel);
 
-    const label = document.createElement('label');
-    label.htmlFor = `task-${index}`;
-    label.innerText = task.name;
-    optionDiv.appendChild(label);
-
-    const sizeSelect = document.createElement('select');
-    sizeSelect.id = `size-${index}`;
-    sizeSelect.className = 'ml-2 p-1 border rounded';
     Object.keys(sizeLevels).forEach(size => {
-      const optionElement = document.createElement('option');
-      optionElement.value = size;
-      optionElement.innerText = size;
-      optionElement.title = sizeLevels[size].description;
-      sizeSelect.appendChild(optionElement);
+      const sizeDiv = document.createElement('div');
+      sizeDiv.className = 'ml-4';
+
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = `size-${index}`;
+      radio.value = size;
+      radio.className = 'mr-2';
+      sizeDiv.appendChild(radio);
+
+      const radioLabel = document.createElement('label');
+      radioLabel.innerText = size;
+      radioLabel.title = sizeLevels[size].description;
+      sizeDiv.appendChild(radioLabel);
+
+      optionDiv.appendChild(sizeDiv);
     });
-    optionDiv.appendChild(sizeSelect);
 
     optionsDiv.appendChild(optionDiv);
   }
@@ -118,35 +120,38 @@ function toggleOptions(index) {
 function calculateProjectSize() {
   let totalDays = 0;
   const selectedTasks = [];
+  const projectName = document.getElementById('project-name').value;
 
   tasks.forEach((task, index) => {
     const optionsDiv = document.getElementById(`options-${index}`);
     if (task.options.length > 0) {
       task.options.forEach(option => {
-        const checkbox = document.getElementById(`task-${index}-${option}`);
-        if (checkbox.checked) {
-          selectedTasks.push(`${task.name} - ${option}`);
-          const sizeSelect = document.getElementById(`size-${index}-${option}`);
-          const sizeValue = sizeSelect.value;
+        const radios = document.getElementsByName(`size-${index}-${option}`);
+        radios.forEach(radio => {
+          if (radio.checked) {
+            selectedTasks.push(`${task.name} - ${option}`);
+            const sizeValue = radio.value;
+            if (sizeValue === 'XL') {
+              alert('Please break down the task for more accurate estimation.');
+              return;
+            }
+            totalDays += sizeLevels[sizeValue].days;
+          }
+        });
+      });
+    } else {
+      const radios = document.getElementsByName(`size-${index}`);
+      radios.forEach(radio => {
+        if (radio.checked) {
+          selectedTasks.push(task.name);
+          const sizeValue = radio.value;
           if (sizeValue === 'XL') {
             alert('Please break down the task for more accurate estimation.');
             return;
           }
-          totalDays += sizeLevels[sizeSelect.value].days;
+          totalDays += sizeLevels[sizeValue].days;
         }
       });
-    } else {
-      const checkbox = document.getElementById(`task-${index}`);
-      if (checkbox.checked) {
-        selectedTasks.push(task.name);
-        const sizeSelect = document.getElementById(`size-${index}`);
-        const sizeValue = sizeSelect.value;
-        if (sizeValue === 'XL') {
-          alert('Please break down the task for more accurate estimation.');
-          return;
-        }
-        totalDays += sizeLevels[sizeSelect.value].days;
-      }
     }
   });
 
@@ -163,6 +168,7 @@ function calculateProjectSize() {
   }
 
   document.getElementById('result').innerHTML = `
+    <h2 class="text-xl font-bold">Project Name: ${projectName}</h2>
     <h2 class="text-xl font-bold">Project Size: ${projectSize}</h2>
     <p>Total Days: ${totalDays}</p>
     <p>Selected Tasks:</p>

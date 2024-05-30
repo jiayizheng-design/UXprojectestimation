@@ -58,7 +58,7 @@ tasks.forEach((task, index) => {
 
       Object.keys(sizeLevels).forEach(size => {
         const sizeDiv = document.createElement('div');
-        sizeDiv.className = 'inline-block mr-4';
+        sizeDiv.className = 'block';
 
         const radio = document.createElement('input');
         radio.type = 'radio';
@@ -87,7 +87,7 @@ tasks.forEach((task, index) => {
 
     Object.keys(sizeLevels).forEach(size => {
       const sizeDiv = document.createElement('div');
-      sizeDiv.className = 'inline-block mr-4';
+      sizeDiv.className = 'block';
 
       const radio = document.createElement('input');
       radio.type = 'radio';

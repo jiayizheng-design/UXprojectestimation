@@ -52,19 +52,9 @@ tasks.forEach((task, index) => {
       const optionDiv = document.createElement('div');
       optionDiv.className = 'mb-2';
 
-      const optionCheckbox = document.createElement('input');
-      optionCheckbox.type = 'checkbox';
-      optionCheckbox.className = 'mr-2';
-      optionCheckbox.addEventListener('change', () => toggleSizeOptions(index, option));
-      
       const optionLabel = document.createElement('label');
       optionLabel.innerText = option;
-      optionLabel.prepend(optionCheckbox);
       optionDiv.appendChild(optionLabel);
-
-      const sizeOptionsDiv = document.createElement('div');
-      sizeOptionsDiv.id = `size-options-${index}-${option}`;
-      sizeOptionsDiv.className = 'ml-4 hidden';
 
       Object.keys(sizeLevels).forEach(size => {
         const sizeDiv = document.createElement('div');
@@ -82,29 +72,18 @@ tasks.forEach((task, index) => {
         radioLabel.title = sizeLevels[size].description;
         sizeDiv.appendChild(radioLabel);
 
-        sizeOptionsDiv.appendChild(sizeDiv);
+        optionDiv.appendChild(sizeDiv);
       });
 
-      optionDiv.appendChild(sizeOptionsDiv);
       optionsDiv.appendChild(optionDiv);
     });
   } else {
     const optionDiv = document.createElement('div');
     optionDiv.className = 'mb-2';
 
-    const optionCheckbox = document.createElement('input');
-    optionCheckbox.type = 'checkbox';
-    optionCheckbox.className = 'mr-2';
-    optionCheckbox.addEventListener('change', () => toggleSizeOptions(index));
-    
     const optionLabel = document.createElement('label');
     optionLabel.innerText = task.name;
-    optionLabel.prepend(optionCheckbox);
     optionDiv.appendChild(optionLabel);
-
-    const sizeOptionsDiv = document.createElement('div');
-    sizeOptionsDiv.id = `size-options-${index}`;
-    sizeOptionsDiv.className = 'ml-4 hidden';
 
     Object.keys(sizeLevels).forEach(size => {
       const sizeDiv = document.createElement('div');
@@ -122,10 +101,9 @@ tasks.forEach((task, index) => {
       radioLabel.title = sizeLevels[size].description;
       sizeDiv.appendChild(radioLabel);
 
-      sizeOptionsDiv.appendChild(sizeDiv);
+      optionDiv.appendChild(sizeDiv);
     });
 
-    optionDiv.appendChild(sizeOptionsDiv);
     optionsDiv.appendChild(optionDiv);
   }
 
@@ -135,18 +113,7 @@ tasks.forEach((task, index) => {
 
 function toggleOptions(index) {
   const optionsDiv = document.getElementById(`options-${index}`);
-  const sizeOptionsDiv = document.getElementById(`size-options-${index}`);
-  
-  if (optionsDiv.classList.contains('hidden') && sizeOptionsDiv) {
-    sizeOptionsDiv.classList.remove('hidden');
-  } else {
-    optionsDiv.classList.toggle('hidden');
-  }
-}
-
-function toggleSizeOptions(index, option = null) {
-  const sizeOptionsDiv = option ? document.getElementById(`size-options-${index}-${option}`) : document.getElementById(`size-options-${index}`);
-  sizeOptionsDiv.classList.toggle('hidden');
+  optionsDiv.classList.toggle('hidden');
 }
 
 function calculateProjectSize() {
@@ -158,28 +125,24 @@ function calculateProjectSize() {
     const optionsDiv = document.getElementById(`options-${index}`);
     if (task.options.length > 0) {
       task.options.forEach(option => {
-        const optionCheckbox = document.querySelector(`#options-${index} input[value="${option}"]`);
-        if (optionCheckbox && optionCheckbox.checked) {
-          const radios = document.getElementsByName(`size-${index}-${option}`);
-          radios.forEach(radio => {
-            if (radio.checked) {
-              selectedTasks.push(`${task.name} - ${option}`);
-              totalDays += sizeLevels[radio.value].days;
-            }
-          });
-        }
-      });
-    } else {
-      const optionCheckbox = document.querySelector(`#options-${index} input[type="checkbox"]`);
-      if (optionCheckbox && optionCheckbox.checked) {
-        const radios = document.getElementsByName(`size-${index}`);
+        const radios = document.getElementsByName(`size-${index}-${option}`);
         radios.forEach(radio => {
           if (radio.checked) {
-            selectedTasks.push(task.name);
-            totalDays += sizeLevels[radio.value].days;
+            selectedTasks.push(`${task.name} - ${option}`);
+            const sizeValue = radio.value;
+            totalDays += sizeLevels[sizeValue].days;
           }
         });
-      }
+      });
+    } else {
+      const radios = document.getElementsByName(`size-${index}`);
+      radios.forEach(radio => {
+        if (radio.checked) {
+          selectedTasks.push(task.name);
+          const sizeValue = radio.value;
+          totalDays += sizeLevels[sizeValue].days;
+        }
+      });
     }
   });
 
@@ -198,4 +161,8 @@ function calculateProjectSize() {
   document.getElementById('result').innerHTML = `
     <h2 class="text-xl font-bold">Project Name: ${projectName}</h2>
     <h2 class="text-xl font-bold">Project Size: ${projectSize}</h2>
-    <p>Total Days:
+    <p>Total Days: ${totalDays}</p>
+    <p>Selected Tasks:</p>
+    <ul class="list-disc ml-6">${selectedTasks.map(task => `<li>${task}</li>`).join('')}</ul>
+  `;
+}

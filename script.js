@@ -135,13 +135,7 @@ tasks.forEach((task, index) => {
 
 function toggleOptions(index) {
   const optionsDiv = document.getElementById(`options-${index}`);
-  const sizeOptionsDiv = document.getElementById(`size-options-${index}`);
-  
-  if (optionsDiv.classList.contains('hidden') && sizeOptionsDiv) {
-    sizeOptionsDiv.classList.remove('hidden');
-  } else {
-    optionsDiv.classList.toggle('hidden');
-  }
+  optionsDiv.classList.toggle('hidden');
 }
 
 function toggleSizeOptions(index, option = null) {
@@ -158,7 +152,7 @@ function calculateProjectSize() {
     const optionsDiv = document.getElementById(`options-${index}`);
     if (task.options.length > 0) {
       task.options.forEach(option => {
-        const optionCheckbox = document.querySelector(`#options-${index} input[value="${option}"]`);
+        const optionCheckbox = document.querySelector(`#size-options-${index}-${option} input[type="checkbox"]`);
         if (optionCheckbox && optionCheckbox.checked) {
           const radios = document.getElementsByName(`size-${index}-${option}`);
           radios.forEach(radio => {
@@ -170,7 +164,7 @@ function calculateProjectSize() {
         }
       });
     } else {
-      const optionCheckbox = document.querySelector(`#options-${index} input[type="checkbox"]`);
+      const optionCheckbox = document.querySelector(`#size-options-${index} input[type="checkbox"]`);
       if (optionCheckbox && optionCheckbox.checked) {
         const radios = document.getElementsByName(`size-${index}`);
         radios.forEach(radio => {

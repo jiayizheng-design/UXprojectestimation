@@ -1,26 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UX Project Size Estimator</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Project Size Estimator</title>
+    <style>
+        .hidden { display: none; }
+        .task-group { margin-bottom: 1em; }
+    </style>
 </head>
-<body class="bg-gray-100 p-6">
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow-md">
-    <h1 class="text-2xl font-bold mb-4">UX Project Size Estimator</h1>
-    <div class="mb-4">
-      <label for="project-name" class="block text-lg font-semibold">Project Name:</label>
-      <input id="project-name" type="text" class="mt-1 p-2 border rounded w-full">
+<body>
+    <h1>UX Project Size Estimator</h1>
+    <form id="project-form">
+        <label for="project-name">Project Name:</label>
+        <input type="text" id="project-name" required><br><br>
+
+        <div class="task-group">
+            <label>UX Tasks:</label><br>
+            <label><input type="checkbox" class="task" data-subtasks="internal,external,analyzing-results"> User Research</label><br>
+            <div class="subtask-group hidden">
+                <label><input type="checkbox" class="subtask"> Internal</label><br>
+                <label><input type="checkbox" class="subtask"> External</label><br>
+                <label><input type="checkbox" class="subtask"> Analyzing Results</label><br>
+            </div>
+            <label><input type="checkbox" class="task"> Journey Map</label><br>
+            <label><input type="checkbox" class="task"> User Flow Diagrams</label><br>
+            <label><input type="checkbox" class="task"> Wireframes</label><br>
+            <label><input type="checkbox" class="task"> Prototype</label><br>
+            <label><input type="checkbox" class="task"> Concept Testing Meeting</label><br>
+            <label><input type="checkbox" class="task" data-subtasks="preparing-testing-scenarios,conducting-testing-sessions,analyzing-results"> Usability Testing</label><br>
+            <div class="subtask-group hidden">
+                <label><input type="checkbox" class="subtask"> Preparing User Testing Scenarios</label><br>
+                <label><input type="checkbox" class="subtask"> Conducting User Testing Sessions</label><br>
+                <label><input type="checkbox" class="subtask"> Analyzing Results</label><br>
+            </div>
+            <label><input type="checkbox" class="task" data-subtasks="making-design-adjustments,design-specs,sign-off-meeting"> Design Reviews and Iterations</label><br>
+            <div class="subtask-group hidden">
+                <label><input type="checkbox" class="subtask"> Making Design Adjustments Based on Feedback</label><br>
+                <label><input type="checkbox" class="subtask"> Design Specs</label><br>
+                <label><input type="checkbox" class="subtask"> Sign Off Meeting</label><br>
+            </div>
+        </div>
+
+        <div id="size-levels" class="hidden">
+            <label>Size Level:</label><br>
+            <label><input type="radio" name="size-level" value="0.5"> Take a few hours (0.5 days)</label><br>
+            <label><input type="radio" name="size-level" value="1.5"> Take 1-2 days (1.5 days)</label><br>
+            <label><input type="radio" name="size-level" value="7"> Take several days to a week (7 days)</label><br>
+            <label><input type="radio" name="size-level" value="14"> Take 1-2 weeks (14 days)</label><br>
+        </div><br>
+
+        <label for="concurrent-works">Number of Concurrent Works:</label>
+        <input type="number" id="concurrent-works" min="0" value="0"><br><br>
+
+        <label for="weekly-meetings">Regular Weekly Meeting Hours:</label>
+        <input type="number" id="weekly-meetings" min="0" value="0"><br><br>
+
+        <button type="button" onclick="calculateProjectSize()">Calculate Project Size</button>
+    </form>
+
+    <h2>Project Size Estimate</h2>
+    <div id="project-result" class="hidden">
+        <p>Project Name: <span id="result-project-name"></span></p>
+        <p>Estimated Total Days: <span id="result-total-days"></span></p>
+        <p>Selected Tasks: <span id="result-tasks"></span></p>
+        <p>Project Size: <span id="result-size"></span></p>
     </div>
-    <div id="task-list"></div>
-    <div class="mt-4">
-      <label for="concurrent-tasks" class="block text-lg font-semibold">How many concurrent tasks do you have?</label>
-      <input id="concurrent-tasks" type="number" class="mt-1 p-2 border rounded w-full" value="0" min="0">
-    </div>
-    <button onclick="calculateProjectSize()" class="mt-6 bg-blue-500 text-white p-2 rounded">Calculate Project Size</button>
-    <div id="result" class="mt-6"></div>
-  </div>
+
+
   <script src="script.js"></script>
 </body>
 </html>

@@ -19,11 +19,10 @@ const tasks = [
 ];
 
 const sizeLevels = {
-  XS: { description: 'Quick and simple tasks that take a few hours.', days: 0.5 },
-  S: { description: 'Tasks that can be completed within a day or two.', days: 1.5 },
-  M: { description: 'Moderate tasks that take several days to a week.', days: 7 },
-  L: { description: 'Complex tasks requiring one to two weeks.', days: 14 },
-  XL: { description: 'Very complex tasks that might take multiple weeks.', days: 21 }
+  'Take a few hours': { description: 'Quick and simple tasks that take a few hours.', days: 0.5 },
+  'Take 1-2 days': { description: 'Tasks that can be completed within a day or two.', days: 1.5 },
+  'Take several days to a week': { description: 'Moderate tasks that take several days to a week.', days: 7 },
+  'Take 1-2 weeks': { description: 'Complex tasks requiring one to two weeks.', days: 14 }
 };
 
 const taskList = document.getElementById('task-list');
@@ -59,7 +58,7 @@ tasks.forEach((task, index) => {
 
       Object.keys(sizeLevels).forEach(size => {
         const sizeDiv = document.createElement('div');
-        sizeDiv.className = 'ml-4';
+        sizeDiv.className = 'inline-block mr-4';
 
         const radio = document.createElement('input');
         radio.type = 'radio';
@@ -88,7 +87,7 @@ tasks.forEach((task, index) => {
 
     Object.keys(sizeLevels).forEach(size => {
       const sizeDiv = document.createElement('div');
-      sizeDiv.className = 'ml-4';
+      sizeDiv.className = 'inline-block mr-4';
 
       const radio = document.createElement('input');
       radio.type = 'radio';
@@ -131,10 +130,6 @@ function calculateProjectSize() {
           if (radio.checked) {
             selectedTasks.push(`${task.name} - ${option}`);
             const sizeValue = radio.value;
-            if (sizeValue === 'XL') {
-              alert('Please break down the task for more accurate estimation.');
-              return;
-            }
             totalDays += sizeLevels[sizeValue].days;
           }
         });
@@ -145,10 +140,6 @@ function calculateProjectSize() {
         if (radio.checked) {
           selectedTasks.push(task.name);
           const sizeValue = radio.value;
-          if (sizeValue === 'XL') {
-            alert('Please break down the task for more accurate estimation.');
-            return;
-          }
           totalDays += sizeLevels[sizeValue].days;
         }
       });

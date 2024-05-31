@@ -75,7 +75,6 @@ tasks.forEach((task, index) => {
         radio.name = `size-${index}-${option}`;
         radio.value = size;
         radio.className = 'mr-2';
-        radio.addEventListener('change', () => updateDays(radio, optionCheckbox));
         sizeDiv.appendChild(radio);
 
         const radioLabel = document.createElement('label');
@@ -116,7 +115,6 @@ tasks.forEach((task, index) => {
       radio.name = `size-${index}`;
       radio.value = size;
       radio.className = 'mr-2';
-      radio.addEventListener('change', () => updateDays(radio, optionCheckbox));
       sizeDiv.appendChild(radio);
 
       const radioLabel = document.createElement('label');
@@ -138,29 +136,11 @@ tasks.forEach((task, index) => {
 function toggleOptions(index) {
   const optionsDiv = document.getElementById(`options-${index}`);
   optionsDiv.classList.toggle('hidden');
-
-  const sizeOptionsDiv = document.getElementById(`size-options-${index}`);
-  if (!optionsDiv.children.length) {
-    sizeOptionsDiv.classList.toggle('hidden');
-  }
 }
 
 function toggleSizeOptions(index, option = null) {
   const sizeOptionsDiv = option ? document.getElementById(`size-options-${index}-${option}`) : document.getElementById(`size-options-${index}`);
   sizeOptionsDiv.classList.toggle('hidden');
-}
-
-let totalDays = 0;
-
-function updateDays(radio, checkbox) {
-  const sizeValue = radio.value;
-  const days = sizeLevels[sizeValue].days;
-  
-  if (checkbox.checked) {
-    totalDays += days;
-  } else {
-    totalDays -= days;
-  }
 }
 
 function calculateProjectSize() {
@@ -172,7 +152,7 @@ function calculateProjectSize() {
     const optionsDiv = document.getElementById(`options-${index}`);
     if (task.options.length > 0) {
       task.options.forEach(option => {
-        const optionCheckbox = document.querySelector(`#options-${index} input[value="${option}"]`);
+        const optionCheckbox = document.querySelector(`#size-options-${index}-${option} input[type="checkbox"]`);
         if (optionCheckbox && optionCheckbox.checked) {
           const radios = document.getElementsByName(`size-${index}-${option}`);
           radios.forEach(radio => {
@@ -184,7 +164,7 @@ function calculateProjectSize() {
         }
       });
     } else {
-      const optionCheckbox = document.querySelector(`#options-${index} input[type="checkbox"]`);
+      const optionCheckbox = document.querySelector(`#size-options-${index} input[type="checkbox"]`);
       if (optionCheckbox && optionCheckbox.checked) {
         const radios = document.getElementsByName(`size-${index}`);
         radios.forEach(radio => {

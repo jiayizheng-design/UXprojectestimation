@@ -179,14 +179,7 @@ function calculateProjectSize() {
 
   const concurrentTasks = parseInt(document.getElementById('concurrent-tasks').value);
   totalDays += concurrentTasks * 1.5;
-  const getWeek = totalDays / 5;
-  
-  // average weekly hours
-  const averageWeeklyMeetingHours = parseInt(document.getElementById('average-weekly-meeting-hours').value);
-  const totalMeetingHoursToDays = Math.round(getWeek * averageWeeklyMeetingHours / 8);
-  
-  totalDays += totalMeetingHoursToDays;
-  
+
   let projectSize = '';
   if (totalDays <= 21) {
     projectSize = 'Small Project';

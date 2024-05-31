@@ -75,6 +75,7 @@ tasks.forEach((task, index) => {
         radio.name = `size-${index}-${option}`;
         radio.value = size;
         radio.className = 'mr-2';
+        radio.addEventListener('change', () => updateDays(radio, optionCheckbox));
         sizeDiv.appendChild(radio);
 
         const radioLabel = document.createElement('label');
@@ -115,6 +116,7 @@ tasks.forEach((task, index) => {
       radio.name = `size-${index}`;
       radio.value = size;
       radio.className = 'mr-2';
+      radio.addEventListener('change', () => updateDays(radio, optionCheckbox));
       sizeDiv.appendChild(radio);
 
       const radioLabel = document.createElement('label');
@@ -146,6 +148,19 @@ function toggleOptions(index) {
 function toggleSizeOptions(index, option = null) {
   const sizeOptionsDiv = option ? document.getElementById(`size-options-${index}-${option}`) : document.getElementById(`size-options-${index}`);
   sizeOptionsDiv.classList.toggle('hidden');
+}
+
+let totalDays = 0;
+
+function updateDays(radio, checkbox) {
+  const sizeValue = radio.value;
+  const days = sizeLevels[sizeValue].days;
+  
+  if (checkbox.checked) {
+    totalDays += days;
+  } else {
+    totalDays -= days;
+  }
 }
 
 function calculateProjectSize() {

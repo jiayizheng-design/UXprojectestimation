@@ -1,20 +1,20 @@
 const tasks = [
   {
-    name: 'User research',
-    options: ['Internal understanding sessions/meetings', 'External understanding sessions/meetings', 'Analyzing results']
+    name: 'User Research',
+    options: ['Internal', 'External', 'Analyzing results']
   },
-  { name: 'Concept testing', options: ['Internal customer validation 1', 'Implementation review 1'] },
-  { name: 'Journey map', options: [] },
+  { name: 'Concept testing', options: [] },
+  { name: 'Journey Map', options: [] },
   { name: 'User flow diagrams', options: [] },
   { name: 'Wireframes', options: [] },
   { name: 'Prototype', options: [] },
   {
-    name: 'External user testing',
-    options: ['Prepare user testing', 'Conduct user testing sessions', 'Analyze result']
+    name: 'Usability testing',
+    options: ['Preparing user testing scenarios', 'Conducting user testing sessions', 'Analyzing result']
   },
   {
-    name: 'Internal refine and handoff',
-    options: ['Internal Customer Validation 2', 'Implementation review 2', 'Design adjustments based on feedback', 'Handoff meeting', 'Design Specs']
+    name: 'Design reviews and iterations',
+    options: ['Making design adjustments based on feedback', 'Design Specs', 'Sign off meeting']
   }
 ];
 
@@ -52,19 +52,9 @@ tasks.forEach((task, index) => {
       const optionDiv = document.createElement('div');
       optionDiv.className = 'mb-2';
 
-      const optionCheckbox = document.createElement('input');
-      optionCheckbox.type = 'checkbox';
-      optionCheckbox.className = 'mr-2';
-      optionCheckbox.addEventListener('change', () => toggleSizeOptions(index, option));
-      
       const optionLabel = document.createElement('label');
       optionLabel.innerText = option;
-      optionLabel.prepend(optionCheckbox);
       optionDiv.appendChild(optionLabel);
-
-      const sizeOptionsDiv = document.createElement('div');
-      sizeOptionsDiv.id = `size-options-${index}-${option}`;
-      sizeOptionsDiv.className = 'ml-4 hidden';
 
       Object.keys(sizeLevels).forEach(size => {
         const sizeDiv = document.createElement('div');
@@ -82,29 +72,18 @@ tasks.forEach((task, index) => {
         radioLabel.title = sizeLevels[size].description;
         sizeDiv.appendChild(radioLabel);
 
-        sizeOptionsDiv.appendChild(sizeDiv);
+        optionDiv.appendChild(sizeDiv);
       });
 
-      optionDiv.appendChild(sizeOptionsDiv);
       optionsDiv.appendChild(optionDiv);
     });
   } else {
     const optionDiv = document.createElement('div');
     optionDiv.className = 'mb-2';
 
-    const optionCheckbox = document.createElement('input');
-    optionCheckbox.type = 'checkbox';
-    optionCheckbox.className = 'mr-2';
-    optionCheckbox.addEventListener('change', () => toggleSizeOptions(index));
-    
     const optionLabel = document.createElement('label');
     optionLabel.innerText = task.name;
-    optionLabel.prepend(optionCheckbox);
     optionDiv.appendChild(optionLabel);
-
-    const sizeOptionsDiv = document.createElement('div');
-    sizeOptionsDiv.id = `size-options-${index}`;
-    sizeOptionsDiv.className = 'ml-4 hidden';
 
     Object.keys(sizeLevels).forEach(size => {
       const sizeDiv = document.createElement('div');
@@ -122,10 +101,9 @@ tasks.forEach((task, index) => {
       radioLabel.title = sizeLevels[size].description;
       sizeDiv.appendChild(radioLabel);
 
-      sizeOptionsDiv.appendChild(sizeDiv);
+      optionDiv.appendChild(sizeDiv);
     });
 
-    optionDiv.appendChild(sizeOptionsDiv);
     optionsDiv.appendChild(optionDiv);
   }
 
@@ -138,11 +116,6 @@ function toggleOptions(index) {
   optionsDiv.classList.toggle('hidden');
 }
 
-function toggleSizeOptions(index, option = null) {
-  const sizeOptionsDiv = option ? document.getElementById(`size-options-${index}-${option}`) : document.getElementById(`size-options-${index}`);
-  sizeOptionsDiv.classList.toggle('hidden');
-}
-
 function calculateProjectSize() {
   let totalDays = 0;
   const selectedTasks = [];
@@ -152,28 +125,24 @@ function calculateProjectSize() {
     const optionsDiv = document.getElementById(`options-${index}`);
     if (task.options.length > 0) {
       task.options.forEach(option => {
-        const optionCheckbox = optionsDiv.querySelector(`input[type="checkbox"]`);
-        if (optionCheckbox.checked) {
-          const radios = document.getElementsByName(`size-${index}-${option}`);
-          radios.forEach(radio => {
-            if (radio.checked) {
-              selectedTasks.push(`${task.name} - ${option}`);
-              totalDays += sizeLevels[radio.value].days;
-            }
-          });
-        }
-      });
-    } else {
-      const optionCheckbox = optionsDiv.querySelector(`input[type="checkbox"]`);
-      if (optionCheckbox.checked) {
-        const radios = document.getElementsByName(`size-${index}`);
+        const radios = document.getElementsByName(`size-${index}-${option}`);
         radios.forEach(radio => {
           if (radio.checked) {
-            selectedTasks.push(task.name);
-            totalDays += sizeLevels[radio.value].days;
+            selectedTasks.push(`${task.name} - ${option}`);
+            const sizeValue = radio.value;
+            totalDays += sizeLevels[sizeValue].days;
           }
         });
-      }
+      });
+    } else {
+      const radios = document.getElementsByName(`size-${index}`);
+      radios.forEach(radio => {
+        if (radio.checked) {
+          selectedTasks.push(task.name);
+          const sizeValue = radio.value;
+          totalDays += sizeLevels[sizeValue].days;
+        }
+      });
     }
   });
 

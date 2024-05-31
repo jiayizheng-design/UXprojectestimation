@@ -135,11 +135,10 @@ tasks.forEach((task, index) => {
 
 function toggleOptions(index) {
   const optionsDiv = document.getElementById(`options-${index}`);
+  optionsDiv.classList.toggle('hidden');
+
   const sizeOptionsDiv = document.getElementById(`size-options-${index}`);
-  
-  if (optionsDiv.children.length > 0) {
-    optionsDiv.classList.toggle('hidden');
-  } else {
+  if (!optionsDiv.children.length) {
     sizeOptionsDiv.classList.toggle('hidden');
   }
 }
@@ -158,7 +157,7 @@ function calculateProjectSize() {
     const optionsDiv = document.getElementById(`options-${index}`);
     if (task.options.length > 0) {
       task.options.forEach(option => {
-        const optionCheckbox = document.querySelector(`#size-options-${index}-${option} input[type="checkbox"]`);
+        const optionCheckbox = document.querySelector(`#options-${index} input[value="${option}"]`);
         if (optionCheckbox && optionCheckbox.checked) {
           const radios = document.getElementsByName(`size-${index}-${option}`);
           radios.forEach(radio => {
@@ -170,7 +169,7 @@ function calculateProjectSize() {
         }
       });
     } else {
-      const optionCheckbox = document.querySelector(`#size-options-${index} input[type="checkbox"]`);
+      const optionCheckbox = document.querySelector(`#options-${index} input[type="checkbox"]`);
       if (optionCheckbox && optionCheckbox.checked) {
         const radios = document.getElementsByName(`size-${index}`);
         radios.forEach(radio => {
@@ -198,4 +197,8 @@ function calculateProjectSize() {
   document.getElementById('result').innerHTML = `
     <h2 class="text-xl font-bold">Project Name: ${projectName}</h2>
     <h2 class="text-xl font-bold">Project Size: ${projectSize}</h2>
-    <p>Total Days: ${totalDays}</
+    <p>Total Days: ${totalDays}</p>
+    <p>Selected Tasks:</p>
+    <ul class="list-disc ml-6">${selectedTasks.map(task => `<li>${task}</li>`).join('')}</ul>
+  `;
+}

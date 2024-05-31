@@ -25,6 +25,8 @@ const sizeLevels = {
   'Take 1-2 weeks': { description: 'Complex tasks requiring one to two weeks.', days: 14 }
 };
 
+let totalDays = 0;
+
 const taskList = document.getElementById('task-list');
 
 tasks.forEach((task, index) => {
@@ -34,13 +36,13 @@ tasks.forEach((task, index) => {
   const taskLabel = document.createElement('label');
   taskLabel.className = 'block text-lg font-semibold mb-2 cursor-pointer';
   taskLabel.innerText = task.name;
-  
+
   const taskCheckbox = document.createElement('input');
   taskCheckbox.type = 'checkbox';
   taskCheckbox.className = 'mr-2';
   taskCheckbox.addEventListener('change', () => toggleOptions(index));
   taskLabel.prepend(taskCheckbox);
-  
+
   taskDiv.appendChild(taskLabel);
 
   const optionsDiv = document.createElement('div');
@@ -52,19 +54,30 @@ tasks.forEach((task, index) => {
       const optionDiv = document.createElement('div');
       optionDiv.className = 'mb-2';
 
+      const optionCheckbox = document.createElement('input');
+      optionCheckbox.type = 'checkbox';
+      optionCheckbox.className = 'mr-2';
+      optionCheckbox.addEventListener('change', () => toggleSizeOptions(index, option));
+      
       const optionLabel = document.createElement('label');
       optionLabel.innerText = option;
+      optionLabel.prepend(optionCheckbox);
       optionDiv.appendChild(optionLabel);
+
+      const sizeOptionsDiv = document.createElement('div');
+      sizeOptionsDiv.id = `size-options-${index}-${option}`;
+      sizeOptionsDiv.className = 'ml-4 hidden';
 
       Object.keys(sizeLevels).forEach(size => {
         const sizeDiv = document.createElement('div');
-        sizeDiv.className = 'inline-block mr-4';
+        sizeDiv.className = 'block';
 
         const radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = `size-${index}-${option}`;
         radio.value = size;
         radio.className = 'mr-2';
+        radio.addEventListener('change', () => updateDays(radio, optionCheckbox));
         sizeDiv.appendChild(radio);
 
         const radioLabel = document.createElement('label');
@@ -72,28 +85,40 @@ tasks.forEach((task, index) => {
         radioLabel.title = sizeLevels[size].description;
         sizeDiv.appendChild(radioLabel);
 
-        optionDiv.appendChild(sizeDiv);
+        sizeOptionsDiv.appendChild(sizeDiv);
       });
 
+      optionDiv.appendChild(sizeOptionsDiv);
       optionsDiv.appendChild(optionDiv);
     });
   } else {
     const optionDiv = document.createElement('div');
     optionDiv.className = 'mb-2';
 
+    const optionCheckbox = document.createElement('input');
+    optionCheckbox.type = 'checkbox';
+    optionCheckbox.className = 'mr-2';
+    optionCheckbox.addEventListener('change', () => toggleSizeOptions(index));
+    
     const optionLabel = document.createElement('label');
     optionLabel.innerText = task.name;
+    optionLabel.prepend(optionCheckbox);
     optionDiv.appendChild(optionLabel);
+
+    const sizeOptionsDiv = document.createElement('div');
+    sizeOptionsDiv.id = `size-options-${index}`;
+    sizeOptionsDiv.className = 'ml-4 hidden';
 
     Object.keys(sizeLevels).forEach(size => {
       const sizeDiv = document.createElement('div');
-      sizeDiv.className = 'inline-block mr-4';
+      sizeDiv.className = 'block';
 
       const radio = document.createElement('input');
       radio.type = 'radio';
       radio.name = `size-${index}`;
       radio.value = size;
       radio.className = 'mr-2';
+      radio.addEventListener('change', () => updateDays(radio, optionCheckbox));
       sizeDiv.appendChild(radio);
 
       const radioLabel = document.createElement('label');
@@ -101,9 +126,10 @@ tasks.forEach((task, index) => {
       radioLabel.title = sizeLevels[size].description;
       sizeDiv.appendChild(radioLabel);
 
-      optionDiv.appendChild(sizeDiv);
+      sizeOptionsDiv.appendChild(sizeDiv);
     });
 
+    optionDiv.appendChild(sizeOptionsDiv);
     optionsDiv.appendChild(optionDiv);
   }
 
@@ -114,6 +140,46 @@ tasks.forEach((task, index) => {
 function toggleOptions(index) {
   const optionsDiv = document.getElementById(`options-${index}`);
   optionsDiv.classList.toggle('hidden');
+
+  const sizeOptionsDiv = document.getElementById(`size-options-${index}`);
+  if (!optionsDiv.children.length) {
+    sizeOptionsDiv.classList.toggle('hidden');
+  }
+}
+
+function toggleSizeOptions(index, option = null) {
+  const sizeOptionsDiv = option ? document.getElementById(`size-options-${index}-${option}`) : document.getElementById(`size-options-${index}`);
+  sizeOptionsDiv.classList.toggle('hidden');
+  if (option && !sizeOptionsDiv.classList.contains('hidden')) {
+    const radios = document.getElementsByName(`size-${index}-${option}`);
+    radios.forEach(radio => {
+      if (radio.checked) {
+        const sizeValue = radio.value;
+        totalDays -= sizeLevels[sizeValue].days;
+        radio.checked = false;
+      }
+    });
+  } else if (!option && !sizeOptionsDiv.classList.contains('hidden')) {
+    const radios = document.getElementsByName(`size-${index}`);
+    radios.forEach(radio => {
+      if (radio.checked) {
+        const sizeValue = radio.value;
+        totalDays -= sizeLevels[sizeValue].days;
+        radio.checked = false;
+      }
+    });
+  }
+}
+
+function updateDays(radio, checkbox) {
+  const sizeValue = radio.value;
+  const days = sizeLevels[sizeValue].days;
+
+  if (checkbox.checked) {
+    totalDays += days;
+  } else {
+    totalDays -= days;
+  }
 }
 
 function calculateProjectSize() {
@@ -125,24 +191,28 @@ function calculateProjectSize() {
     const optionsDiv = document.getElementById(`options-${index}`);
     if (task.options.length > 0) {
       task.options.forEach(option => {
-        const radios = document.getElementsByName(`size-${index}-${option}`);
-        radios.forEach(radio => {
-          if (radio.checked) {
-            selectedTasks.push(`${task.name} - ${option}`);
-            const sizeValue = radio.value;
-            totalDays += sizeLevels[sizeValue].days;
-          }
-        });
-      });
-    } else {
-      const radios = document.getElementsByName(`size-${index}`);
-      radios.forEach(radio => {
-        if (radio.checked) {
-          selectedTasks.push(task.name);
-          const sizeValue = radio.value;
-          totalDays += sizeLevels[sizeValue].days;
+        const optionCheckbox = document.querySelector(`#options-${index} input[value="${option}"]`);
+        if (optionCheckbox && optionCheckbox.checked) {
+          const radios = document.getElementsByName(`size-${index}-${option}`);
+          radios.forEach(radio => {
+            if (radio.checked) {
+              selectedTasks.push(`${task.name} - ${option}`);
+              totalDays += sizeLevels[radio.value].days;
+            }
+          });
         }
       });
+    } else {
+      const optionCheckbox = document.querySelector(`#options-${index} input[type="checkbox"]`);
+      if (optionCheckbox && optionCheckbox.checked) {
+        const radios = document.getElementsByName(`size-${index}`);
+        radios.forEach(radio => {
+          if (radio.checked) {
+            selectedTasks.push(task.name);
+            totalDays += sizeLevels[radio.value].days;
+          }
+        });
+      }
     }
   });
 

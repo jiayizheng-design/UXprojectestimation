@@ -183,9 +183,9 @@ function calculateProjectSize() {
   
   // average weekly hours
   const averageWeeklyMeetingHours = parseInt(document.getElementById('average-weekly-meeting-hours').value);
-  const totalMeetingHoursToDays = getWeek * averageWeeklyMeetingHours / 24;
+  const totalMeetingHoursToDays = getWeek * averageWeeklyMeetingHours / 8;
   
-  totalDays += Math.round(totalMeetingHoursToDays);
+  totalDays += totalMeetingHoursToDays;
   
   let projectSize = '';
   if (totalDays <= 21) {

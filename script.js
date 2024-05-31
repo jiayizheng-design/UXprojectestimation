@@ -1,20 +1,20 @@
 const tasks = [
   {
-    name: 'User Research',
-    options: ['Internal', 'External', 'Analyzing results']
+    name: 'User research',
+    options: ['Internal understanding sessions/meetings', 'External understanding sessions/meetings', 'Analyzing results']
   },
-  { name: 'Concept testing', options: [] },
-  { name: 'Journey Map', options: [] },
+  { name: 'Concept testing', options: ['Internal customer validation 1', 'Implementation review 1'] },
+  { name: 'Journey map', options: [] },
   { name: 'User flow diagrams', options: [] },
   { name: 'Wireframes', options: [] },
   { name: 'Prototype', options: [] },
   {
-    name: 'Usability testing',
-    options: ['Preparing user testing scenarios', 'Conducting user testing sessions', 'Analyzing result']
+    name: 'External user testing',
+    options: ['Prepare user testing', 'Conduct user testing sessions', 'Analyze result']
   },
   {
-    name: 'Design reviews and iterations',
-    options: ['Making design adjustments based on feedback', 'Design Specs', 'Sign off meeting']
+    name: 'Internal refine and handoff',
+    options: ['Internal Customer Validation 2', 'Implementation review 2', 'Design adjustments based on feedback', 'Handoff meeting', 'Design Specs']
   }
 ];
 

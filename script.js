@@ -149,23 +149,22 @@ function calculateProjectSize() {
   const projectName = document.getElementById('project-name').value;
 
   tasks.forEach((task, index) => {
-    const optionsDiv = document.getElementById(`options-${index}`);
-    if (task.options.length > 0) {
-      task.options.forEach(option => {
-        const optionCheckbox = optionsDiv.querySelector(`input[type="checkbox"][value="${option}"]`);
-        if (optionCheckbox && optionCheckbox.checked) {
-          const radios = document.getElementsByName(`size-${index}-${option}`);
-          radios.forEach(radio => {
-            if (radio.checked) {
-              selectedTasks.push(`${task.name} - ${option}`);
-              totalDays += sizeLevels[radio.value].days;
-            }
-          });
-        }
-      });
-    } else {
-      const optionCheckbox = optionsDiv.querySelector(`input[type="checkbox"]`);
-      if (optionCheckbox && optionCheckbox.checked) {
+    const taskCheckbox = document.querySelectorAll(`#task-list > div:nth-child(${index + 1}) input[type="checkbox"]`)[0];
+    if (taskCheckbox.checked) {
+      if (task.options.length > 0) {
+        task.options.forEach(option => {
+          const optionCheckbox = document.querySelectorAll(`#task-list > div:nth-child(${index + 1}) input[type="checkbox"]`)[1];
+          if (optionCheckbox.checked) {
+            const radios = document.getElementsByName(`size-${index}-${option}`);
+            radios.forEach(radio => {
+              if (radio.checked) {
+                selectedTasks.push(`${task.name} - ${option}`);
+                totalDays += sizeLevels[radio.value].days;
+              }
+            });
+          }
+        });
+      } else {
         const radios = document.getElementsByName(`size-${index}`);
         radios.forEach(radio => {
           if (radio.checked) {

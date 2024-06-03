@@ -152,8 +152,8 @@ function calculateProjectSize() {
     const optionsDiv = document.getElementById(`options-${index}`);
     if (task.options.length > 0) {
       task.options.forEach(option => {
-        const optionCheckbox = optionsDiv.querySelector(`input[type="checkbox"]`);
-        if (optionCheckbox.checked) {
+        const optionCheckbox = optionsDiv.querySelector(`input[type="checkbox"][value="${option}"]`);
+        if (optionCheckbox && optionCheckbox.checked) {
           const radios = document.getElementsByName(`size-${index}-${option}`);
           radios.forEach(radio => {
             if (radio.checked) {
@@ -165,7 +165,7 @@ function calculateProjectSize() {
       });
     } else {
       const optionCheckbox = optionsDiv.querySelector(`input[type="checkbox"]`);
-      if (optionCheckbox.checked) {
+      if (optionCheckbox && optionCheckbox.checked) {
         const radios = document.getElementsByName(`size-${index}`);
         radios.forEach(radio => {
           if (radio.checked) {

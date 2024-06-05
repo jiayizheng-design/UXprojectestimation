@@ -201,12 +201,13 @@ function calculateProjectSize() {
   const totalMeetingHours = totalWeeks * weeklyMeetingHours;
   const meetingDays = totalMeetingHours / 8;
   let finalTotalDays = Math.round(totalDays + meetingDays);
+  let finalTotalWeeks = finalTotalDays / 5;
   
   document.getElementById('result').innerHTML = `
     <h2 class="text-xl font-bold">Project Name: ${projectName}</h2>
     <h2 class="text-xl font-bold">Project Size: ${projectSize}</h2>
     <p>Total Days: ${finalTotalDays}</p>
-    <p>Total Meeting Hours: ${totalMeetingHours.toFixed(2)}</p>
+    <p>Total weeks with 5 working days: ${finalTotalWeeks}</p>
     <p>Selected Tasks:</p>
     <ul class="list-disc ml-6">${selectedTasks.map(task => `<li>${task}</li>`).join('')}</ul>
   `;

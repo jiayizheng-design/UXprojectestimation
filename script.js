@@ -200,7 +200,7 @@ function calculateProjectSize() {
   const totalWeeks = totalDays / 7;
   const totalMeetingHours = totalWeeks * weeklyMeetingHours;
   const meetingDays = totalMeetingHours / 8;
-
+  totalDays += meetingDays;
   document.getElementById('result').innerHTML = `
     <h2 class="text-xl font-bold">Project Name: ${projectName}</h2>
     <h2 class="text-xl font-bold">Project Size: ${projectSize}</h2>

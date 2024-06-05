@@ -25,24 +25,74 @@ const sizeLevels = {
   'Take 1-2 weeks': { description: 'Complex tasks requiring one to two weeks.', days: 14 }
 };
 
-const taskList = document.getElementById('task-list');
+document.addEventListener('DOMContentLoaded', () => {
+  const taskList = document.getElementById('task-list');
 
-tasks.forEach((task, index) => {
-  const taskDiv = document.createElement('div');
-  taskDiv.className = 'mb-4';
+  tasks.forEach((task, index) => {
+    const taskDiv = document.createElement('div');
+    taskDiv.className = 'mb-4';
 
-  const taskLabel = document.createElement('h2');
-  taskLabel.className = 'block text-lg font-semibold mb-2';
-  taskLabel.innerText = task.name;
-  
-  taskDiv.appendChild(taskLabel);
+    const taskLabel = document.createElement('h2');
+    taskLabel.className = 'block text-lg font-semibold mb-2';
+    taskLabel.innerText = task.name;
+    
+    taskDiv.appendChild(taskLabel);
 
-  const optionsDiv = document.createElement('div');
-  optionsDiv.id = `options-${index}`;
-  optionsDiv.className = 'ml-4';
+    const optionsDiv = document.createElement('div');
+    optionsDiv.id = `options-${index}`;
+    optionsDiv.className = 'ml-4';
 
-  if (task.options.length > 0) {
-    task.options.forEach(option => {
+    if (task.options.length > 0) {
+      task.options.forEach(option => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'mb-2';
+
+        const optionCheckbox = document.createElement('input');
+        optionCheckbox.type = 'checkbox';
+        optionCheckbox.className = 'mr-2';
+        optionCheckbox.setAttribute('data-option', option);
+        optionCheckbox.addEventListener('change', () => {
+          toggleSizeOptions(index, option);
+          if (!optionCheckbox.checked) {
+            const radios = document.getElementsByName(`size-${index}-${option}`);
+            radios.forEach(radio => {
+              radio.checked = false;
+            });
+          }
+        });
+        
+        const optionLabel = document.createElement('label');
+        optionLabel.innerText = option;
+        optionLabel.prepend(optionCheckbox);
+        optionDiv.appendChild(optionLabel);
+
+        const sizeOptionsDiv = document.createElement('div');
+        sizeOptionsDiv.id = `size-options-${index}-${option}`;
+        sizeOptionsDiv.className = 'ml-4 hidden';
+
+        Object.keys(sizeLevels).forEach(size => {
+          const sizeDiv = document.createElement('div');
+          sizeDiv.className = 'block';
+
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = `size-${index}-${option}`;
+          radio.value = size;
+          radio.className = 'mr-2';
+          sizeDiv.appendChild(radio);
+
+          const radioLabel = document.createElement('label');
+          radioLabel.innerText = size;
+          radioLabel.title = sizeLevels[size].description;
+          sizeDiv.appendChild(radioLabel);
+
+          sizeOptionsDiv.appendChild(sizeDiv);
+        });
+
+        optionDiv.appendChild(sizeOptionsDiv);
+        optionsDiv.appendChild(optionDiv);
+      });
+    } else {
       const optionDiv = document.createElement('div');
       optionDiv.className = 'mb-2';
 
@@ -50,9 +100,9 @@ tasks.forEach((task, index) => {
       optionCheckbox.type = 'checkbox';
       optionCheckbox.className = 'mr-2';
       optionCheckbox.addEventListener('change', () => {
-        toggleSizeOptions(index, option);
+        toggleSizeOptions(index);
         if (!optionCheckbox.checked) {
-          const radios = document.getElementsByName(`size-${index}-${option}`);
+          const radios = document.getElementsByName(`size-${index}`);
           radios.forEach(radio => {
             radio.checked = false;
           });
@@ -60,12 +110,12 @@ tasks.forEach((task, index) => {
       });
       
       const optionLabel = document.createElement('label');
-      optionLabel.innerText = option;
+      optionLabel.innerText = task.name;
       optionLabel.prepend(optionCheckbox);
       optionDiv.appendChild(optionLabel);
 
       const sizeOptionsDiv = document.createElement('div');
-      sizeOptionsDiv.id = `size-options-${index}-${option}`;
+      sizeOptionsDiv.id = `size-options-${index}`;
       sizeOptionsDiv.className = 'ml-4 hidden';
 
       Object.keys(sizeLevels).forEach(size => {
@@ -74,7 +124,7 @@ tasks.forEach((task, index) => {
 
         const radio = document.createElement('input');
         radio.type = 'radio';
-        radio.name = `size-${index}-${option}`;
+        radio.name = `size-${index}`;
         radio.value = size;
         radio.className = 'mr-2';
         sizeDiv.appendChild(radio);
@@ -89,58 +139,11 @@ tasks.forEach((task, index) => {
 
       optionDiv.appendChild(sizeOptionsDiv);
       optionsDiv.appendChild(optionDiv);
-    });
-  } else {
-    const optionDiv = document.createElement('div');
-    optionDiv.className = 'mb-2';
+    }
 
-    const optionCheckbox = document.createElement('input');
-    optionCheckbox.type = 'checkbox';
-    optionCheckbox.className = 'mr-2';
-    optionCheckbox.addEventListener('change', () => {
-      toggleSizeOptions(index);
-      if (!optionCheckbox.checked) {
-        const radios = document.getElementsByName(`size-${index}`);
-        radios.forEach(radio => {
-          radio.checked = false;
-        });
-      }
-    });
-    
-    const optionLabel = document.createElement('label');
-    optionLabel.innerText = task.name;
-    optionLabel.prepend(optionCheckbox);
-    optionDiv.appendChild(optionLabel);
-
-    const sizeOptionsDiv = document.createElement('div');
-    sizeOptionsDiv.id = `size-options-${index}`;
-    sizeOptionsDiv.className = 'ml-4 hidden';
-
-    Object.keys(sizeLevels).forEach(size => {
-      const sizeDiv = document.createElement('div');
-      sizeDiv.className = 'block';
-
-      const radio = document.createElement('input');
-      radio.type = 'radio';
-      radio.name = `size-${index}`;
-      radio.value = size;
-      radio.className = 'mr-2';
-      sizeDiv.appendChild(radio);
-
-      const radioLabel = document.createElement('label');
-      radioLabel.innerText = size;
-      radioLabel.title = sizeLevels[size].description;
-      sizeDiv.appendChild(radioLabel);
-
-      sizeOptionsDiv.appendChild(sizeDiv);
-    });
-
-    optionDiv.appendChild(sizeOptionsDiv);
-    optionsDiv.appendChild(optionDiv);
-  }
-
-  taskDiv.appendChild(optionsDiv);
-  taskList.appendChild(taskDiv);
+    taskDiv.appendChild(optionsDiv);
+    taskList.appendChild(taskDiv);
+  });
 });
 
 function toggleSizeOptions(index, option = null) {

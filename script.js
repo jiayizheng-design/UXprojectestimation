@@ -49,7 +49,15 @@ tasks.forEach((task, index) => {
       const optionCheckbox = document.createElement('input');
       optionCheckbox.type = 'checkbox';
       optionCheckbox.className = 'mr-2';
-      optionCheckbox.addEventListener('change', () => toggleSizeOptions(index, option));
+      optionCheckbox.addEventListener('change', () => {
+        toggleSizeOptions(index, option);
+        if (!optionCheckbox.checked) {
+          const radios = document.getElementsByName(`size-${index}-${option}`);
+          radios.forEach(radio => {
+            radio.checked = false;
+          });
+        }
+      });
       
       const optionLabel = document.createElement('label');
       optionLabel.innerText = option;
@@ -89,7 +97,15 @@ tasks.forEach((task, index) => {
     const optionCheckbox = document.createElement('input');
     optionCheckbox.type = 'checkbox';
     optionCheckbox.className = 'mr-2';
-    optionCheckbox.addEventListener('change', () => toggleSizeOptions(index));
+    optionCheckbox.addEventListener('change', () => {
+      toggleSizeOptions(index);
+      if (!optionCheckbox.checked) {
+        const radios = document.getElementsByName(`size-${index}`);
+        radios.forEach(radio => {
+          radio.checked = false;
+        });
+      }
+    });
     
     const optionLabel = document.createElement('label');
     optionLabel.innerText = task.name;
@@ -167,6 +183,7 @@ function calculateProjectSize() {
   });
 
   const concurrentTasks = parseInt(document.getElementById('concurrent-tasks').value);
+  const weeklyMeetingHours = parseInt(document.getElementById('weekly-meeting-hours').value);
   totalDays += concurrentTasks * 1.5;
 
   let projectSize = '';
@@ -178,10 +195,15 @@ function calculateProjectSize() {
     projectSize = 'Large Project';
   }
 
+  const totalWeeks = totalDays / 7;
+  const totalMeetingHours = totalWeeks * weeklyMeetingHours;
+  const meetingDays = totalMeetingHours / 8;
+
   document.getElementById('result').innerHTML = `
     <h2 class="text-xl font-bold">Project Name: ${projectName}</h2>
     <h2 class="text-xl font-bold">Project Size: ${projectSize}</h2>
     <p>Total Days: ${totalDays}</p>
+    <p>Regular Meeting Days: ${meetingDays.toFixed(2)}</p>
     <p>Selected Tasks:</p>
     <ul class="list-disc ml-6">${selectedTasks.map(task => `<li>${task}</li>`).join('')}</ul>
   `;

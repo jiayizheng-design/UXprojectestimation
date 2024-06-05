@@ -167,7 +167,6 @@ function calculateProjectSize() {
   });
 
   const concurrentTasks = parseInt(document.getElementById('concurrent-tasks').value);
-  const weeklyMeetingHours = parseInt(document.getElementById('weekly-meeting-hours').value);
   totalDays += concurrentTasks * 1.5;
 
   let projectSize = '';
@@ -179,15 +178,10 @@ function calculateProjectSize() {
     projectSize = 'Large Project';
   }
 
-  const totalWeeks = totalDays / 7;
-  const totalMeetingHours = totalWeeks * weeklyMeetingHours;
-  const meetingDays = totalMeetingHours / 8;
-
   document.getElementById('result').innerHTML = `
     <h2 class="text-xl font-bold">Project Name: ${projectName}</h2>
     <h2 class="text-xl font-bold">Project Size: ${projectSize}</h2>
     <p>Total Days: ${totalDays}</p>
-    <p>Regular Meeting Days: ${meetingDays.toFixed(2)}</p>
     <p>Selected Tasks:</p>
     <ul class="list-disc ml-6">${selectedTasks.map(task => `<li>${task}</li>`).join('')}</ul>
   `;

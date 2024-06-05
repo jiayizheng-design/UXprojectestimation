@@ -184,8 +184,10 @@ function calculateProjectSize() {
     }
   });
 
-  const concurrentTasks = parseInt(document.getElementById('concurrent-tasks').value);
-  const weeklyMeetingHours = parseInt(document.getElementById('weekly-meeting-hours').value);
+  const concurrentTasksInput = document.getElementById('concurrent-tasks').value;
+  const weeklyMeetingHoursInput = document.getElementById('weekly-meeting-hours').value;
+  const concurrentTasks = concurrentTasksInput ? parseInt(concurrentTasksInput) : 0;
+  const weeklyMeetingHours = weeklyMeetingHoursInput ? parseInt(weeklyMeetingHoursInput) : 0;
   totalDays += concurrentTasks * 1.5;
 
   let projectSize = '';
@@ -196,6 +198,7 @@ function calculateProjectSize() {
   } else {
     projectSize = 'Large Project';
   }
+
 
   const totalWeeks = totalDays / 7;
   const totalMeetingHours = totalWeeks * weeklyMeetingHours;

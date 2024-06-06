@@ -184,11 +184,8 @@ function calculateProjectSize() {
     }
   });
 
-  const concurrentTasksInput = document.getElementById('concurrent-tasks').value;
   const weeklyMeetingHoursInput = document.getElementById('weekly-meeting-hours').value;
-  const concurrentTasks = concurrentTasksInput ? parseInt(concurrentTasksInput) : 0;
   const weeklyMeetingHours = weeklyMeetingHoursInput ? parseInt(weeklyMeetingHoursInput) : 0;
-  totalDays += concurrentTasks * 1.5;
 
   let projectSize = '';
   if (totalDays <= 21) {

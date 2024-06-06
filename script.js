@@ -184,11 +184,8 @@ function calculateProjectSize() {
     }
   });
 
-  const concurrentTasksInput = document.getElementById('concurrent-tasks').value;
   const weeklyMeetingHoursInput = document.getElementById('weekly-meeting-hours').value;
-  const concurrentTasks = concurrentTasksInput ? parseInt(concurrentTasksInput) : 0;
   const weeklyMeetingHours = weeklyMeetingHoursInput ? parseInt(weeklyMeetingHoursInput) : 0;
-  totalDays += concurrentTasks * 1.5;
 
   let projectSize = '';
   if (totalDays <= 21) {
@@ -208,9 +205,9 @@ function calculateProjectSize() {
   
   document.getElementById('result').innerHTML = `
     <h2 class="text-xl font-bold">Project Name: ${projectName}</h2>
-    <h2 class="text-xl font-bold">Project Size: ${projectSize}</h2>
+    <h2 class="text-xl font-bold">Estimated total weeks with 5 working days: ${finalTotalWeeks}</h2>
     <p>Total Days: ${finalTotalDays}</p>
-    <p>Total weeks with 5 working days: ${finalTotalWeeks}</p>
+    <p>Project Size: ${projectSize}</p>
     <p>Selected Tasks:</p>
     <ul class="list-disc ml-6">${selectedTasks.map(task => `<li>${task}</li>`).join('')}</ul>
   `;

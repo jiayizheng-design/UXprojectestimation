@@ -205,7 +205,7 @@ function calculateProjectSize() {
   
   document.getElementById('result').innerHTML = `
     <h2 class="text-xl font-bold">Project Name: ${projectName}</h2>
-    <h2 class="text-xl font-bold">Estimated total weeks with 5 working days: ${finalTotalWeeks}</h2>
+    <h2 class="text-xl font-bold">Estimated in work weeks (5 days): ${finalTotalWeeks}</h2>
     <p>Total Days: ${finalTotalDays}</p>
     <p>Project Size: ${projectSize}</p>
     <p>Selected Tasks:</p>
